@@ -1,0 +1,40 @@
+{
+  "name": "Sample block: 5K base",
+  "coachNotes": "A gentle 4-week base block: mostly easy running, one quality session a week and a slowly growing long run. Replace this with your own AI-generated plan.",
+  "runs": [
+    { "week": 1, "title": "Easy run", "type": "easy", "targetDurationMin": 25, "targetEffort": "Conversational", "description": "Relaxed pace, keep breathing easy." },
+    { "week": 1, "title": "Strides", "type": "strides", "targetDurationMin": 25, "description": "Easy run with short relaxed accelerations at the end.",
+      "segments": [
+        { "label": "Easy jog", "durationMin": 20, "intensity": "easy" },
+        { "label": "Stride", "durationMin": 0.33, "repeats": 4, "intensity": "fast but relaxed, walk back" }
+      ] },
+    { "week": 1, "title": "Long run", "type": "long", "targetDistanceKm": 5, "targetEffort": "Easy", "description": "Steady and easy. Walk breaks are fine." },
+
+    { "week": 2, "title": "Easy run", "type": "easy", "targetDurationMin": 28, "targetEffort": "Conversational" },
+    { "week": 2, "title": "Minute repeats", "type": "intervals", "targetDurationMin": 32,
+      "segments": [
+        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
+        { "label": "Hard", "durationMin": 1, "repeats": 6, "intensity": "5K effort, 1 min easy jog between" },
+        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+      ] },
+    { "week": 2, "title": "Long run", "type": "long", "targetDistanceKm": 6, "targetEffort": "Easy" },
+
+    { "week": 3, "title": "Easy run", "type": "easy", "targetDurationMin": 30, "targetEffort": "Conversational" },
+    { "week": 3, "title": "Tempo", "type": "tempo", "targetDurationMin": 35,
+      "segments": [
+        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
+        { "label": "Tempo", "durationMin": 15, "intensity": "comfortably hard" },
+        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+      ] },
+    { "week": 3, "title": "Long run", "type": "long", "targetDistanceKm": 7, "targetEffort": "Easy" },
+
+    { "week": 4, "title": "Recovery run", "type": "recovery", "targetDurationMin": 20, "targetEffort": "Very easy", "description": "Lighter week to absorb the training." },
+    { "week": 4, "title": "Hill reps", "type": "hills", "targetDurationMin": 30,
+      "segments": [
+        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
+        { "label": "Uphill", "durationMin": 0.5, "repeats": 6, "intensity": "strong, jog back down" },
+        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+      ] },
+    { "week": 4, "title": "5K time trial", "type": "race", "targetDistanceKm": 5, "targetEffort": "Best effort", "description": "Warm up for 10 minutes, then run 5K as evenly as you can. This gives your coach a benchmark." }
+  ]
+}

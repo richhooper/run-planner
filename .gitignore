@@ -1,0 +1,33 @@
+# Xcode project is generated from project.yml by XcodeGen (run `xcodegen`)
+*.xcodeproj
+*.xcworkspace
+
+# Xcode user state and build output
+xcuserdata/
+DerivedData/
+build/
+*.xcuserstate
+*.xcscmblueprint
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# macOS / Windows / editors
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Run Planner data backups exported from the app
+runplanner*.json
