@@ -1,7 +1,7 @@
 # XcodeGen spec. On the Mac:  brew install xcodegen && xcodegen
 name: RunPlanner
 options:
-  bundleIdPrefix: com.CHANGEME
+  bundleIdPrefix: com.richardhooper
   deploymentTarget:
     iOS: "17.0"
 settings:
@@ -18,7 +18,8 @@ targets:
     settings:
       base:
         # Must be unique to you, e.g. com.yourname.runplanner
-        PRODUCT_BUNDLE_IDENTIFIER: com.CHANGEME.runplanner
+        PRODUCT_BUNDLE_IDENTIFIER: com.richardhooper.runplanner
+        DEVELOPMENT_TEAM: CVA284TGB5
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_ENTITLEMENTS: RunPlanner/RunPlanner.entitlements
