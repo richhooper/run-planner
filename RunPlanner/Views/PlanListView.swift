@@ -7,6 +7,7 @@ enum ActiveSheet: String, Identifiable {
 
 struct PlanListView: View {
     @Environment(PlanStore.self) private var store
+    @Environment(WatchSync.self) private var watchSync
     @State private var sheet: ActiveSheet?
 
     var body: some View {
@@ -41,6 +42,7 @@ struct PlanListView: View {
                     }
                 }
                 .environment(store)
+                .environment(watchSync)
             }
         }
     }

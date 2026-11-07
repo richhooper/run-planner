@@ -48,14 +48,52 @@ final class PlanStore {
         data.currentPlan = plan
     }
 
-    /// Makes `plan` the current plan, archiving the old one if any of it was done.
-    func install(_ plan: TrainingPlan) {
+    enum InstallMode {
+        /// Old block is finished: keep it, with its links, in history.
+        case archive
+        /// New plan is a revision: move completions across by week and run number.
+        case relink
+        /// Drop the old block and its links, so those workouts can be attached again.
+        case removeLinks
+    }
+
+    /// Makes `plan` the current plan.
+    func install(_ plan: TrainingPlan, mode: InstallMode = .archive) {
         var d = data
+        var plan = plan
         if let current = d.currentPlan, current.resolvedCount > 0 {
-            d.history.insert(current, at: 0)
+            switch mode {
+            case .archive:
+                d.history.insert(current, at: 0)
+            case .relink:
+                for (i, run) in plan.runs.enumerated() {
+                    plan.runs[i].completion = current.matchingRun(for: run, in: plan)?.completion
+                }
+            case .removeLinks:
+                break
+            }
         }
         d.currentPlan = plan
         data = d
+    }
+}
+
+extension TrainingPlan {
+    /// 1-based position of `run` among the runs in its week.
+    func numberInWeek(of run: PlannedRun) -> Int {
+        (runsInWeek(run.week ?? 0).firstIndex { $0.id == run.id } ?? 0) + 1
+    }
+
+    /// The run in this plan with the same week and run number as `run` in `other`.
+    func matchingRun(for run: PlannedRun, in other: TrainingPlan) -> PlannedRun? {
+        let week = runsInWeek(run.week ?? 0)
+        let n = other.numberInWeek(of: run)
+        return week.indices.contains(n - 1) ? week[n - 1] : nil
+    }
+
+    /// How many of this plan's completed or skipped runs have a match in `newPlan`.
+    func relinkCount(into newPlan: TrainingPlan) -> Int {
+        newPlan.runs.filter { matchingRun(for: $0, in: newPlan)?.completion != nil }.count
     }
 }
 

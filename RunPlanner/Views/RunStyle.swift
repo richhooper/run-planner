@@ -32,6 +32,18 @@ extension PlannedRun {
     }
 }
 
+extension Segment {
+    /// Warm-ups, cool-downs and recoveries are muted; the work itself uses the run's colour.
+    func color(runColor: Color) -> Color {
+        let k = (kind ?? label).lowercased()
+        if k.contains("warm") || k.contains("cool") { return .gray }
+        if k.contains("recover") || k.contains("walk") { return .teal }
+        if k.contains("stride") { return .indigo }
+        if k.contains("drill") { return .mint }
+        return runColor
+    }
+}
+
 enum Effort {
     static func label(_ v: Int) -> String {
         switch v {

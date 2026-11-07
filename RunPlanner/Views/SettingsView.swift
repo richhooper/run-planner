@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(PlanStore.self) private var store
+    @Environment(WatchSync.self) private var watchSync
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -28,6 +29,12 @@ struct SettingsView: View {
 
                 Section("Plan shape") {
                     Stepper("\(store.data.runsPerWeek) runs per week", value: $store.data.runsPerWeek, in: 1...7)
+                }
+
+                Section {
+                    Toggle("Send next run to Apple Watch", isOn: $store.data.sendToWatch)
+                } footer: {
+                    Text(watchSync.status ?? "Your next run appears in the Workout app as a custom workout with its warm-up, repeats and alerts. Finished runs are removed automatically.")
                 }
 
                 if !store.data.history.isEmpty {

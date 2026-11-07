@@ -42,6 +42,7 @@ struct ImportView: View {
                             LabeledContent("Name", value: plan.name)
                             LabeledContent("Runs", value: "\(plan.runs.count)")
                             if plan.weeks.count > 1 { LabeledContent("Weeks", value: "\(plan.weeks.count)") }
+                            if let terms = plan.glossary, !terms.isEmpty { LabeledContent("Terms explained", value: "\(terms.count)") }
                             if let notes = plan.coachNotes { Text(notes).font(.footnote).foregroundStyle(.secondary) }
                             ForEach(plan.runs.prefix(4)) { run in
                                 Label(run.title, systemImage: run.symbol).foregroundStyle(run.color)
@@ -67,23 +68,38 @@ struct ImportView: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Import") {
-                        if store.data.currentPlan?.isFinished == false { confirmReplace = true } else { importPlan() }
+                        if (store.data.currentPlan?.resolvedCount ?? 0) > 0 { confirmReplace = true } else { importPlan(.archive) }
                     }
                     .bold()
                     .disabled(parsedPlan == nil)
                 }
             }
-            .confirmationDialog("Your current plan still has runs left.", isPresented: $confirmReplace, titleVisibility: .visible) {
-                Button("Replace current plan", role: .destructive, action: importPlan)
+            .confirmationDialog("What should happen to your completed runs?", isPresented: $confirmReplace, titleVisibility: .visible) {
+                Button("Re-link to the new plan") { importPlan(.relink) }
+                Button("Save old block to history") { importPlan(.archive) }
+                Button("Remove all links", role: .destructive) { importPlan(.removeLinks) }
+                Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Runs you've completed are kept in your history.")
+                Text(replaceMessage)
             }
         }
     }
 
-    private func importPlan() {
+    private var replaceMessage: String {
+        guard let current = store.data.currentPlan, let plan = parsedPlan else { return "" }
+        let matched = current.relinkCount(into: plan)
+        return """
+        You've completed or skipped \(current.resolvedCount) runs in "\(current.name)".
+
+        Re-link: moves them onto the same week and run number in the new plan (\(matched) of \(current.resolvedCount) match). Use this for a revised version of the same block.
+        Save to history: the old block is finished and its results go into future prompts.
+        Remove all links: discards the old block's results so those Apple Watch runs can be attached again.
+        """
+    }
+
+    private func importPlan(_ mode: PlanStore.InstallMode) {
         guard let plan = parsedPlan else { return }
-        store.install(plan)
+        store.install(plan, mode: mode)
         dismiss()
     }
 

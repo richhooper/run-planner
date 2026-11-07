@@ -28,22 +28,47 @@ struct RunDetailView: View {
                     }
                 }
 
-                if let details = run.details?.nilIfBlank {
-                    Section("How to run it") { Text(details) }
+                if let purpose = run.purpose?.nilIfBlank {
+                    Section("Why this run") { Text(purpose) }
+                }
+
+                if let points = run.keyPoints?.compactMap(\.nilIfBlank), !points.isEmpty {
+                    Section("What matters today") {
+                        ForEach(points, id: \.self) { point in
+                            Label(point, systemImage: "checkmark.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(.primary, run.color)
+                        }
+                    }
                 }
 
                 if let segments = run.segments, !segments.isEmpty {
-                    Section("Session") {
-                        ForEach(segments) { seg in
+                    let layout = run.watchLayout
+                    Section {
+                        ForEach(Array(segments.enumerated()), id: \.element.id) { i, seg in
+                            SegmentRow(segment: seg, step: i + 1, run: run, onWatch: layout.isOnWatch(seg))
+                        }
+                    } header: {
+                        Text("Session")
+                    } footer: {
+                        if store.data.sendToWatch && store.data.currentPlan?.nextRun?.id == run.id {
+                            Label("On your Apple Watch now. \(Image(systemName: "bell.fill")) marks the Watch alerts.", systemImage: "applewatch")
+                        } else {
+                            Text("\(Image(systemName: "bell.fill")) marks what your Apple Watch will alert on.")
+                        }
+                    }
+                }
+
+                if let details = run.details?.nilIfBlank {
+                    Section("Coach's notes") { Text(details) }
+                }
+
+                if let terms = store.data.currentPlan?.terms(for: run), !terms.isEmpty {
+                    Section("Terms explained") {
+                        ForEach(terms) { t in
                             VStack(alignment: .leading, spacing: 2) {
-                                HStack {
-                                    Text(seg.label).font(.headline)
-                                    Spacer()
-                                    Text(seg.summary).monospacedDigit()
-                                }
-                                if let intensity = seg.intensity {
-                                    Text(intensity).font(.subheadline).foregroundStyle(.secondary)
-                                }
+                                Text(t.term).font(.headline)
+                                Text(t.meaning).font(.subheadline).foregroundStyle(.secondary)
                             }
                         }
                     }
@@ -94,6 +119,116 @@ struct RunDetailView: View {
             ContentUnavailableView("Run not found", systemImage: "questionmark.circle")
         }
     }
+}
+
+/// One block of the session, laid out like the Apple Watch workout: the work step with its targets,
+/// then the recovery between repeats. A bell marks the target the Watch alerts on.
+struct SegmentRow: View {
+    let segment: Segment
+    let step: Int
+    let run: PlannedRun
+    let onWatch: Bool
+
+    var body: some View {
+        let alert = onWatch ? run.watchAlert(for: segment) : nil
+        HStack(alignment: .top, spacing: 12) {
+            RoundedRectangle(cornerRadius: 2)
+                .fill(segment.color(runColor: run.color))
+                .frame(width: 4)
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("\(step). \(segment.label)").font(.headline)
+                    Spacer()
+                    Text(segment.summary).font(.headline).monospacedDigit()
+                }
+                if !onWatch {
+                    Label("Before you start · not on Watch", systemImage: "applewatch.slash")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+
+                if let pace = segment.targetPace?.nilIfBlank ?? segment.paceRange?.text {
+                    TargetLine(symbol: "speedometer", label: "Pace", value: pace, isAlert: alert.isPace)
+                }
+                if let hr = segment.targetHeartRate?.nilIfBlank ?? segment.heartRateRange?.text {
+                    TargetLine(symbol: "heart.fill", label: "Heart rate", value: hr, isAlert: alert.isHeartRate)
+                }
+                if let effort = segment.targetEffort?.nilIfBlank {
+                    TargetLine(symbol: "gauge.with.dots.needle.50percent", label: "Effort", value: effort)
+                }
+                if let alert, !alertShown(alert) {
+                    TargetLine(symbol: "applewatch", label: "Watch alert", value: alert.text, isAlert: true)
+                }
+                if let how = segment.instructions?.nilIfBlank {
+                    Text(how).font(.subheadline).foregroundStyle(.secondary)
+                }
+
+                if let rec = segment.effectiveRecovery {
+                    RecoveryLine(step: rec)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    /// True when the alert's range is already one of the target lines shown above.
+    private func alertShown(_ alert: WatchAlert) -> Bool {
+        switch alert {
+        case .pace: segment.targetPace?.nilIfBlank != nil || segment.paceRange != nil
+        case .heartRate: segment.targetHeartRate?.nilIfBlank != nil || segment.heartRateRange != nil
+        }
+    }
+}
+
+/// The recovery step between repeats, indented under its block.
+private struct RecoveryLine: View {
+    let step: WatchStep
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline) {
+                Label("Between reps: \(step.label ?? "Recovery")", systemImage: "arrow.uturn.backward")
+                    .font(.subheadline.bold())
+                Spacer()
+                Text(step.summary).font(.subheadline.bold()).monospacedDigit()
+            }
+            if let hr = step.heartRateRange {
+                TargetLine(symbol: "heart.fill", label: "Heart rate", value: hr.text, isAlert: step.alert.isHeartRate)
+            }
+            if let pace = step.paceRange {
+                TargetLine(symbol: "speedometer", label: "Pace", value: pace.text, isAlert: step.alert.isPace)
+            }
+            if let how = step.instructions?.nilIfBlank {
+                Text(how).font(.subheadline).foregroundStyle(.secondary)
+            }
+        }
+        .padding(8)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+private struct TargetLine: View {
+    let symbol: String
+    let label: String
+    let value: String
+    var isAlert = false
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Image(systemName: symbol).foregroundStyle(.secondary).frame(width: 18)
+            Text(label).foregroundStyle(.secondary)
+            Text(value).bold()
+            if isAlert {
+                Image(systemName: "bell.fill").foregroundStyle(.orange).accessibilityLabel("Apple Watch alert")
+            }
+        }
+        .font(.subheadline)
+    }
+}
+
+private extension Optional where Wrapped == WatchAlert {
+    var isPace: Bool { if case .pace? = self { true } else { false } }
+    var isHeartRate: Bool { if case .heartRate? = self { true } else { false } }
 }
 
 struct WorkoutStats: View {

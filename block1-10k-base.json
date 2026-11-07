@@ -1,0 +1,546 @@
+{
+  "name": "Block 1: 10K base",
+  "coachNotes": "This block builds your aerobic base with genuinely easy running (aim under 145 bpm, ceiling 150), adds one controlled quality session a week, and grows the long run from 8 to 10 km. Each session is sent to your Apple Watch with pace or HR alerts so the watch keeps you honest: quality sessions should be controlled, never faster than the target pace. Week 4 eases off, then a 5K time trial resets your paces for Block 2 on the way to sub-55. Do 2 x 10-15 min strength sessions weekly (squats, lunges, glute bridges, calf raises) and stretch after every run to keep the knees happy.",
+  "glossary": [
+    {
+      "term": "Zone 2",
+      "meaning": "An easy heart-rate range where you can talk in full sentences. For you that's roughly 130-145 bpm, with 150 as the ceiling. It builds endurance without tiring you out, so most of your running should be here."
+    },
+    {
+      "term": "HR drift",
+      "meaning": "Heart rate creeping up during a steady run even though your pace hasn't changed, caused by heat, fatigue and fluid loss. It's normal. Slow down to keep under your ceiling rather than stopping."
+    },
+    {
+      "term": "Talk test",
+      "meaning": "If you can speak full sentences you're running easy; a few words at a time is tempo; single words is hard. When the numbers and the talk test disagree, trust the talk test."
+    },
+    {
+      "term": "Run/walk",
+      "meaning": "Planned walk breaks taken from the start (e.g. 4 min run / 1 min walk), before you're tired. It keeps heart rate down and is far better than being forced to stop later."
+    },
+    {
+      "term": "Strides",
+      "meaning": "Short, smooth accelerations of about 20 s, building to fast but relaxed running (not a sprint), then easing off and walking or jogging back. They practise good form and leg speed without adding fatigue. A heart-rate spike during them is expected."
+    },
+    {
+      "term": "5K effort",
+      "meaning": "The hardest pace you could hold for a whole 5K race, about 30 minutes for you. Hard but sustainable: breathing heavily, but in control."
+    },
+    {
+      "term": "Tempo",
+      "meaning": "'Comfortably hard' running: you can say a few words but not chat. It trains the pace you can hold for a long time, which is what makes a 10K feel easier."
+    },
+    {
+      "term": "Dynamic warm-up",
+      "meaning": "Moving stretches before running: leg swings forwards and sideways (10 each leg), walking lunges (10 each leg) and a few high knees. They loosen your hips and legs ready for faster running."
+    },
+    {
+      "term": "Custom Workout",
+      "meaning": "An Apple Watch Workout app feature: tap ⋯ on Outdoor Run, then Create Workout › Custom. Add a warm-up, work and recovery steps with repeats and pace or heart-rate alerts, and the watch cues each step for you."
+    },
+    {
+      "term": "Time trial",
+      "meaning": "A solo, all-out run over a set distance to measure your current fitness. It sets the paces for your next block."
+    },
+    {
+      "term": "RPE",
+      "meaning": "Rate of Perceived Exertion: how hard it feels on a 1-10 scale. 3 is easy chatting, 6-7 is comfortably hard, 8 is hard, 10 is an all-out sprint."
+    }
+  ],
+  "runs": [
+    {
+      "week": 1,
+      "title": "Easy run + strides",
+      "type": "easy",
+      "targetDistanceKm": 5,
+      "targetDurationMin": 40,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150, conversational",
+      "purpose": "Builds your aerobic base, the foundation for everything faster. The strides at the end keep your legs quick without adding fatigue.",
+      "keyPoints": [
+        "Keep heart rate under 145 bpm and never above 150",
+        "Start at the slow end: 8:00-8:30 /km",
+        "Talk test beats the numbers"
+      ],
+      "segments": [
+        {
+          "label": "Easy run",
+          "kind": "main",
+          "distanceKm": 5,
+          "targetPace": "7:30-8:30 /km, start at 8:00-8:30",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3/10, can talk in full sentences",
+          "instructions": "HR drift in the second half is normal. If HR climbs, slow down and shorten your stride before you walk. If you need to walk, use run/walk (4 min run / 1 min walk) from the start.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        },
+        {
+          "label": "Strides",
+          "kind": "strides",
+          "durationMin": 0.33,
+          "repeats": 4,
+          "targetEffort": "RPE 7/10, fast but relaxed",
+          "instructions": "Build up over the first 5 s, hold, then ease off. Tall posture, quick light feet. HR spikes during strides are expected.",
+          "recoveryStep": {
+            "label": "Walk back",
+            "durationMin": 1,
+            "instructions": "Walk or slow jog back, about 60 s"
+          }
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "title": "400 m repeats",
+      "type": "intervals",
+      "targetDurationMin": 43,
+      "purpose": "Teaches your body to run at 5K effort and builds speed, while short reps keep it manageable.",
+      "keyPoints": [
+        "Never faster than 5:40 /km, even if it feels easy at first",
+        "Same pace for every rep",
+        "Jog the recoveries; don't stop"
+      ],
+      "segments": [
+        {
+          "label": "Dynamic warm-up",
+          "kind": "drills",
+          "durationMin": 3,
+          "instructions": "Leg swings and walking lunges before you start jogging."
+        },
+        {
+          "label": "Warm-up jog",
+          "kind": "warmup",
+          "durationMin": 10,
+          "targetHeartRate": "under 145 bpm",
+          "targetEffort": "RPE 2-3/10",
+          "alertHeartRate": "100-145"
+        },
+        {
+          "label": "400 m reps",
+          "kind": "reps",
+          "distanceKm": 0.4,
+          "repeats": 6,
+          "targetPace": "5:40-5:50 /km",
+          "targetEffort": "5K effort, RPE 8/10",
+          "instructions": "Hard but sustainable: a pace you could hold for about 30 minutes. The first 30 s always feels easy, so don't speed up.",
+          "recoveryStep": {
+            "label": "Slow jog",
+            "durationMin": 1.5,
+            "instructions": "90 s slow jog"
+          },
+          "alertPace": "5:40-5:50"
+        },
+        {
+          "label": "Cool-down jog",
+          "kind": "cooldown",
+          "durationMin": 10,
+          "targetEffort": "RPE 2/10",
+          "alertHeartRate": "100-145"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "title": "Long run",
+      "type": "long",
+      "targetDistanceKm": 8,
+      "targetDurationMin": 64,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150",
+      "purpose": "Builds endurance and gets your body used to time on your feet, the key ingredient for a 10K.",
+      "keyPoints": [
+        "Start very slowly",
+        "Slow down rather than stop when HR drifts up",
+        "Drink and stretch afterwards"
+      ],
+      "segments": [
+        {
+          "label": "Long easy run",
+          "kind": "main",
+          "distanceKm": 8,
+          "targetPace": "7:30-8:30 /km",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3-4/10",
+          "instructions": "Expect HR drift over the second half. Planned walk breaks (e.g. 1 min every 10 min) are fine.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Easy run + strides",
+      "type": "easy",
+      "targetDistanceKm": 5.5,
+      "targetDurationMin": 44,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150, conversational",
+      "purpose": "More aerobic base, a little further than last week, with strides to keep your legs quick.",
+      "keyPoints": [
+        "Keep heart rate under 145 bpm and never above 150",
+        "Start at the slow end: 8:00-8:30 /km",
+        "Talk test beats the numbers"
+      ],
+      "segments": [
+        {
+          "label": "Easy run",
+          "kind": "main",
+          "distanceKm": 5.5,
+          "targetPace": "7:30-8:30 /km, start at 8:00-8:30",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3/10, can talk in full sentences",
+          "instructions": "HR drift in the second half is normal. If HR climbs, slow down and shorten your stride before you walk. If you need to walk, use run/walk (4 min run / 1 min walk) from the start.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        },
+        {
+          "label": "Strides",
+          "kind": "strides",
+          "durationMin": 0.33,
+          "repeats": 4,
+          "targetEffort": "RPE 7/10, fast but relaxed",
+          "instructions": "Build up over the first 5 s, hold, then ease off. HR spikes during strides are expected.",
+          "recoveryStep": {
+            "label": "Walk back",
+            "durationMin": 1,
+            "instructions": "Walk or slow jog back, about 60 s"
+          }
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Tempo 2 x 8 min",
+      "type": "tempo",
+      "targetDurationMin": 38,
+      "purpose": "Raises the pace you can hold for a long time, which is what will carry you to a sub-55 10K.",
+      "keyPoints": [
+        "Comfortably hard: a few words, not a chat",
+        "Don't start fast; even pace across both reps",
+        "Jog the recovery"
+      ],
+      "segments": [
+        {
+          "label": "Warm-up jog",
+          "kind": "warmup",
+          "durationMin": 10,
+          "targetHeartRate": "under 145 bpm",
+          "targetEffort": "RPE 2-3/10",
+          "alertHeartRate": "100-145"
+        },
+        {
+          "label": "Tempo",
+          "kind": "reps",
+          "durationMin": 8,
+          "repeats": 2,
+          "targetPace": "5:55-6:10 /km",
+          "targetHeartRate": "settles around 155-165 bpm",
+          "targetEffort": "RPE 6-7/10, comfortably hard",
+          "instructions": "Settle into rhythm in the first minute and hold it. If you can't speak a few words, ease off.",
+          "recoveryStep": {
+            "label": "Slow jog",
+            "durationMin": 2.0,
+            "instructions": "2 min slow jog"
+          },
+          "alertPace": "5:55-6:10",
+          "alertHeartRate": "155-165"
+        },
+        {
+          "label": "Cool-down jog",
+          "kind": "cooldown",
+          "durationMin": 10,
+          "targetEffort": "RPE 2/10",
+          "alertHeartRate": "100-145"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Long run",
+      "type": "long",
+      "targetDistanceKm": 9,
+      "targetDurationMin": 72,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150",
+      "purpose": "Same easy effort as last week, one kilometre further, to keep building endurance.",
+      "keyPoints": [
+        "Same easy effort as last week",
+        "Ease the pace when HR drifts up late on",
+        "Stretch afterwards"
+      ],
+      "segments": [
+        {
+          "label": "Long easy run",
+          "kind": "main",
+          "distanceKm": 9,
+          "targetPace": "7:30-8:30 /km",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3-4/10",
+          "instructions": "Expect HR drift late on; slow down to manage it. Planned walk breaks are fine.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "title": "Easy run + strides",
+      "type": "easy",
+      "targetDistanceKm": 6,
+      "targetDurationMin": 48,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150, conversational",
+      "purpose": "The biggest easy run of the block, now with 6 strides.",
+      "keyPoints": [
+        "Keep heart rate under 145 bpm and never above 150",
+        "Start at the slow end: 8:00-8:30 /km",
+        "Talk test beats the numbers"
+      ],
+      "segments": [
+        {
+          "label": "Easy run",
+          "kind": "main",
+          "distanceKm": 6,
+          "targetPace": "7:30-8:30 /km, start at 8:00-8:30",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3/10, can talk in full sentences",
+          "instructions": "HR drift in the second half is normal. If HR climbs, slow down and shorten your stride before you walk. If you need to walk, use run/walk (4 min run / 1 min walk) from the start.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        },
+        {
+          "label": "Strides",
+          "kind": "strides",
+          "durationMin": 0.33,
+          "repeats": 6,
+          "targetEffort": "RPE 7/10, fast but relaxed",
+          "instructions": "Build up over the first 5 s, hold, then ease off. HR spikes during strides are expected.",
+          "recoveryStep": {
+            "label": "Walk back",
+            "durationMin": 1,
+            "instructions": "Walk or slow jog back, about 60 s"
+          }
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "title": "800 m repeats",
+      "type": "intervals",
+      "targetDurationMin": 46,
+      "purpose": "Longer reps at 5K effort build your ability to hold a strong pace, the step up from 400s.",
+      "keyPoints": [
+        "Never faster than 5:40 /km",
+        "The first rep should feel almost too easy",
+        "Even splits; jog the recoveries"
+      ],
+      "segments": [
+        {
+          "label": "Dynamic warm-up",
+          "kind": "drills",
+          "durationMin": 3,
+          "instructions": "Leg swings and walking lunges before you start jogging."
+        },
+        {
+          "label": "Warm-up jog",
+          "kind": "warmup",
+          "durationMin": 10,
+          "targetHeartRate": "under 145 bpm",
+          "targetEffort": "RPE 2-3/10",
+          "alertHeartRate": "100-145"
+        },
+        {
+          "label": "800 m reps",
+          "kind": "reps",
+          "distanceKm": 0.8,
+          "repeats": 4,
+          "targetPace": "5:40-5:50 /km",
+          "targetEffort": "5K effort, RPE 8/10",
+          "instructions": "Hard but sustainable: a pace you could hold for about 30 minutes. Aim for even splits across all four.",
+          "recoveryStep": {
+            "label": "Slow jog",
+            "durationMin": 2.0,
+            "instructions": "2 min slow jog"
+          },
+          "alertPace": "5:40-5:50"
+        },
+        {
+          "label": "Cool-down jog",
+          "kind": "cooldown",
+          "durationMin": 10,
+          "targetEffort": "RPE 2/10",
+          "alertHeartRate": "100-145"
+        }
+      ]
+    },
+    {
+      "week": 3,
+      "title": "Long run",
+      "type": "long",
+      "targetDistanceKm": 10,
+      "targetDurationMin": 80,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150",
+      "purpose": "Your longest run of the block: your first 10 km, at an easy effort.",
+      "keyPoints": [
+        "Start slow",
+        "Use planned walk breaks if needed",
+        "Stretch well afterwards"
+      ],
+      "segments": [
+        {
+          "label": "Long easy run",
+          "kind": "main",
+          "distanceKm": 10,
+          "targetPace": "7:30-8:30 /km",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3-4/10",
+          "instructions": "Expect HR drift in the second half; slow down rather than stop. Planned walk breaks (e.g. 1 min every 10 min) are fine.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "title": "Easy run + strides",
+      "type": "easy",
+      "targetDistanceKm": 5,
+      "targetDurationMin": 40,
+      "targetPace": "7:30-8:30 /km",
+      "targetEffort": "Zone 2, aim under 145 bpm, ceiling 150, conversational",
+      "purpose": "A lighter week so your body absorbs the training before the time trial.",
+      "keyPoints": [
+        "Keep heart rate under 145 bpm and never above 150",
+        "Compare with week 1: you may be a little quicker at the same HR"
+      ],
+      "segments": [
+        {
+          "label": "Easy run",
+          "kind": "main",
+          "distanceKm": 5,
+          "targetPace": "7:30-8:30 /km, start at the slow end",
+          "targetHeartRate": "under 145 bpm, ceiling 150 (Zone 2)",
+          "targetEffort": "RPE 3/10, can talk in full sentences",
+          "instructions": "Leave room for HR drift in the second half; slow down before you walk.",
+          "alertHeartRate": "100-145",
+          "alertPace": "7:30-8:30"
+        },
+        {
+          "label": "Strides",
+          "kind": "strides",
+          "durationMin": 0.33,
+          "repeats": 4,
+          "targetEffort": "RPE 7/10, fast but relaxed",
+          "recoveryStep": {
+            "label": "Walk back",
+            "durationMin": 1,
+            "instructions": "Walk or slow jog back, about 60 s"
+          }
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "title": "Short tempo",
+      "type": "tempo",
+      "targetDurationMin": 34,
+      "purpose": "A sharpener before the time trial, not a hard session.",
+      "keyPoints": [
+        "Comfortably hard",
+        "Finish feeling you could have done more"
+      ],
+      "segments": [
+        {
+          "label": "Warm-up jog",
+          "kind": "warmup",
+          "durationMin": 10,
+          "targetHeartRate": "under 145 bpm",
+          "targetEffort": "RPE 2-3/10",
+          "alertHeartRate": "100-145"
+        },
+        {
+          "label": "Tempo",
+          "kind": "reps",
+          "durationMin": 6,
+          "repeats": 2,
+          "targetPace": "5:55-6:10 /km",
+          "targetHeartRate": "around 155-165 bpm",
+          "targetEffort": "RPE 6-7/10, comfortably hard",
+          "recoveryStep": {
+            "label": "Slow jog",
+            "durationMin": 2.0,
+            "instructions": "2 min slow jog"
+          },
+          "alertPace": "5:55-6:10",
+          "alertHeartRate": "155-165"
+        },
+        {
+          "label": "Cool-down jog",
+          "kind": "cooldown",
+          "durationMin": 10,
+          "targetEffort": "RPE 2/10",
+          "alertHeartRate": "100-145"
+        }
+      ]
+    },
+    {
+      "week": 4,
+      "title": "5K time trial",
+      "type": "race",
+      "targetDistanceKm": 5,
+      "targetDurationMin": 48,
+      "purpose": "Measures your current fitness. Your time sets the paces for Block 2; sub-28:30 means you're on track for a sub-55 10K.",
+      "keyPoints": [
+        "Flat route, well rested",
+        "Don't go faster than 5:40 /km in the first km",
+        "Push the last 2 km"
+      ],
+      "segments": [
+        {
+          "label": "Warm-up jog",
+          "kind": "warmup",
+          "durationMin": 10,
+          "targetEffort": "RPE 2-3/10",
+          "alertHeartRate": "100-145"
+        },
+        {
+          "label": "Strides",
+          "kind": "strides",
+          "durationMin": 0.33,
+          "repeats": 3,
+          "targetEffort": "RPE 7/10",
+          "recoveryStep": {
+            "label": "Walk back",
+            "durationMin": 1,
+            "instructions": "Walk back, about 60 s"
+          }
+        },
+        {
+          "label": "Controlled start",
+          "kind": "main",
+          "distanceKm": 3,
+          "targetPace": "5:40-5:50 /km, start at about 5:50",
+          "targetEffort": "RPE 7-8/10, hard but controlled",
+          "instructions": "Resist the urge to go faster in the first km. Settle into an even rhythm.",
+          "alertPace": "5:40-5:50"
+        },
+        {
+          "label": "Strong finish",
+          "kind": "main",
+          "distanceKm": 2,
+          "targetPace": "as fast as you can hold",
+          "targetEffort": "RPE 9/10, strong finish",
+          "instructions": "Push from here and empty the tank over the final 500 m. Target: under 28:30 for the full 5 km."
+        },
+        {
+          "label": "Cool-down jog",
+          "kind": "cooldown",
+          "durationMin": 8,
+          "targetEffort": "RPE 2/10",
+          "alertHeartRate": "100-145"
+        }
+      ]
+    }
+  ]
+}

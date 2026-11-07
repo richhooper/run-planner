@@ -1,40 +1,98 @@
 {
   "name": "Sample block: 5K base",
-  "coachNotes": "A gentle 4-week base block: mostly easy running, one quality session a week and a slowly growing long run. Replace this with your own AI-generated plan.",
+  "coachNotes": "A gentle 4-week base block: mostly easy running, one quality session a week and a slowly growing long run. Targets here use effort only because a sample can't know your paces or heart rate; your AI-generated plan will give you exact numbers.",
+  "glossary": [
+    { "term": "RPE", "meaning": "Rate of Perceived Exertion: how hard a run feels on a 1-10 scale. 1 is standing still, 3 is easy chatting, 7 is hard but controlled, 10 is an all-out sprint." },
+    { "term": "Zone 2", "meaning": "An easy heart-rate range, roughly 60-70% of your max heart rate. You can talk in full sentences. Most of your running should be here because it builds endurance without wearing you out." },
+    { "term": "Strides", "meaning": "Short, smooth accelerations of about 20 seconds up to a fast but relaxed pace, followed by a full recovery. They practise good form and leg speed without being tiring." },
+    { "term": "Tempo", "meaning": "A sustained 'comfortably hard' effort (RPE 6-7), about the pace you could race for an hour. You can say a few words but not hold a conversation. It raises the pace you can keep up for a long time." },
+    { "term": "Intervals", "meaning": "Short hard efforts (reps) separated by easy recovery jogs or walks. Splitting the hard running into pieces lets you spend more time at a fast pace than you could in one go." },
+    { "term": "Time trial", "meaning": "A solo, race-effort run over a set distance to measure your current fitness. It gives you and your coach a benchmark to plan from." }
+  ],
   "runs": [
-    { "week": 1, "title": "Easy run", "type": "easy", "targetDurationMin": 25, "targetEffort": "Conversational", "description": "Relaxed pace, keep breathing easy." },
-    { "week": 1, "title": "Strides", "type": "strides", "targetDurationMin": 25, "description": "Easy run with short relaxed accelerations at the end.",
+    { "week": 1, "title": "Easy run", "type": "easy", "targetDurationMin": 25, "targetEffort": "Zone 2, conversational",
+      "purpose": "Builds your aerobic base, the foundation that every faster session sits on.",
+      "keyPoints": ["Keep it easy enough to chat the whole way", "Walk breaks are fine if your breathing gets heavy"],
       "segments": [
-        { "label": "Easy jog", "durationMin": 20, "intensity": "easy" },
-        { "label": "Stride", "durationMin": 0.33, "repeats": 4, "intensity": "fast but relaxed, walk back" }
+        { "label": "Easy run", "kind": "main", "durationMin": 25, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3/10, can talk in full sentences", "instructions": "Start slower than feels natural. If you can't speak a full sentence, slow down." }
       ] },
-    { "week": 1, "title": "Long run", "type": "long", "targetDistanceKm": 5, "targetEffort": "Easy", "description": "Steady and easy. Walk breaks are fine." },
+    { "week": 1, "title": "Easy run + strides", "type": "strides", "targetDurationMin": 25,
+      "purpose": "Easy aerobic running, plus strides at the end to wake up your legs and practise good running form.",
+      "keyPoints": ["The easy part stays easy", "Strides are fast but relaxed, never a sprint"],
+      "segments": [
+        { "label": "Easy run", "kind": "main", "durationMin": 20, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3/10" },
+        { "label": "Strides", "kind": "strides", "durationMin": 0.33, "repeats": 4, "targetEffort": "RPE 7/10, fast and smooth", "recoveryStep": { "label": "Walk back", "durationMin": 1, "instructions": "Walk back to where you started, about 60 s" }, "instructions": "Build up over 5 s, hold a quick relaxed pace, then ease off. Stand tall with quick, light feet and relaxed shoulders." }
+      ] },
+    { "week": 1, "title": "Long run", "type": "long", "targetDistanceKm": 5, "targetEffort": "Easy",
+      "purpose": "Your longest run of the week builds endurance and gets your body used to time on your feet.",
+      "keyPoints": ["Distance matters more than pace today", "Run the first half slower than the second"],
+      "segments": [
+        { "label": "Long easy run", "kind": "main", "distanceKm": 5, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3-4/10", "instructions": "Steady and easy. Take walk breaks whenever you need them." }
+      ] },
 
-    { "week": 2, "title": "Easy run", "type": "easy", "targetDurationMin": 28, "targetEffort": "Conversational" },
+    { "week": 2, "title": "Easy run", "type": "easy", "targetDurationMin": 28, "targetEffort": "Zone 2, conversational",
+      "purpose": "More aerobic base, slightly longer than last week.",
+      "keyPoints": ["Conversational effort the whole way"],
+      "segments": [
+        { "label": "Easy run", "kind": "main", "durationMin": 28, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3/10" }
+      ] },
     { "week": 2, "title": "Minute repeats", "type": "intervals", "targetDurationMin": 32,
+      "purpose": "Your first intervals session: short, hard efforts that build speed and teach you how 5K effort feels.",
+      "keyPoints": ["Run every rep at the same effort; don't blast the first one", "The recovery jog really is easy"],
       "segments": [
-        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
-        { "label": "Hard", "durationMin": 1, "repeats": 6, "intensity": "5K effort, 1 min easy jog between" },
-        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+        { "label": "Warm-up", "kind": "warmup", "durationMin": 10, "targetEffort": "RPE 2-3/10", "instructions": "Easy jog, building gently over the last few minutes." },
+        { "label": "Hard minutes", "kind": "reps", "durationMin": 1, "repeats": 6, "targetEffort": "RPE 8/10, about 5K race effort", "recoveryStep": { "label": "Easy jog", "durationMin": 1, "instructions": "1 min easy jog or walk" }, "instructions": "Hard but controlled: you should be able to do one more rep at the end." },
+        { "label": "Cool-down", "kind": "cooldown", "durationMin": 10, "targetEffort": "RPE 2/10" }
       ] },
-    { "week": 2, "title": "Long run", "type": "long", "targetDistanceKm": 6, "targetEffort": "Easy" },
+    { "week": 2, "title": "Long run", "type": "long", "targetDistanceKm": 6, "targetEffort": "Easy",
+      "purpose": "Extends your endurance by another kilometre.",
+      "keyPoints": ["Easy pace, walk breaks are fine"],
+      "segments": [
+        { "label": "Long easy run", "kind": "main", "distanceKm": 6, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3-4/10" }
+      ] },
 
-    { "week": 3, "title": "Easy run", "type": "easy", "targetDurationMin": 30, "targetEffort": "Conversational" },
+    { "week": 3, "title": "Easy run", "type": "easy", "targetDurationMin": 30, "targetEffort": "Zone 2, conversational",
+      "purpose": "Aerobic base, now 30 minutes non-stop if you can.",
+      "keyPoints": ["Conversational effort the whole way"],
+      "segments": [
+        { "label": "Easy run", "kind": "main", "durationMin": 30, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3/10" }
+      ] },
     { "week": 3, "title": "Tempo", "type": "tempo", "targetDurationMin": 35,
+      "purpose": "Raises the pace you can hold for a long time, which is what makes a 5K feel easier.",
+      "keyPoints": ["Comfortably hard, not racing", "Keep the pace even for the full 15 minutes"],
       "segments": [
-        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
-        { "label": "Tempo", "durationMin": 15, "intensity": "comfortably hard" },
-        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+        { "label": "Warm-up", "kind": "warmup", "durationMin": 10, "targetEffort": "RPE 2-3/10" },
+        { "label": "Tempo", "kind": "main", "durationMin": 15, "targetEffort": "RPE 6-7/10, a few words at a time", "instructions": "Settle into a rhythm in the first 2 minutes, then hold it. If it gets too hard to keep going, ease off slightly." },
+        { "label": "Cool-down", "kind": "cooldown", "durationMin": 10, "targetEffort": "RPE 2/10" }
       ] },
-    { "week": 3, "title": "Long run", "type": "long", "targetDistanceKm": 7, "targetEffort": "Easy" },
+    { "week": 3, "title": "Long run", "type": "long", "targetDistanceKm": 7, "targetEffort": "Easy",
+      "purpose": "The longest run of the block.",
+      "keyPoints": ["Easy pace, walk breaks are fine", "Take water if it's warm"],
+      "segments": [
+        { "label": "Long easy run", "kind": "main", "distanceKm": 7, "targetHeartRate": "Zone 2", "targetEffort": "RPE 3-4/10" }
+      ] },
 
-    { "week": 4, "title": "Recovery run", "type": "recovery", "targetDurationMin": 20, "targetEffort": "Very easy", "description": "Lighter week to absorb the training." },
-    { "week": 4, "title": "Hill reps", "type": "hills", "targetDurationMin": 30,
+    { "week": 4, "title": "Recovery run", "type": "recovery", "targetDurationMin": 20, "targetEffort": "Very easy",
+      "purpose": "A lighter week lets your body absorb the training so you come out of it fitter.",
+      "keyPoints": ["Slower than your normal easy pace", "Feeling fresh afterwards is the goal"],
       "segments": [
-        { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
-        { "label": "Uphill", "durationMin": 0.5, "repeats": 6, "intensity": "strong, jog back down" },
-        { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+        { "label": "Recovery jog", "kind": "main", "durationMin": 20, "targetHeartRate": "low Zone 2", "targetEffort": "RPE 2/10" }
       ] },
-    { "week": 4, "title": "5K time trial", "type": "race", "targetDistanceKm": 5, "targetEffort": "Best effort", "description": "Warm up for 10 minutes, then run 5K as evenly as you can. This gives your coach a benchmark." }
+    { "week": 4, "title": "Hill reps", "type": "hills", "targetDurationMin": 30,
+      "purpose": "Builds leg strength and running power with less impact than fast running on the flat.",
+      "keyPoints": ["Drive with your arms and lift your knees", "Jog back down slowly; that's your recovery"],
+      "segments": [
+        { "label": "Warm-up", "kind": "warmup", "durationMin": 10, "targetEffort": "RPE 2-3/10", "instructions": "Jog to a moderate hill that takes at least 30 s to run up." },
+        { "label": "Uphill", "kind": "reps", "durationMin": 0.5, "repeats": 6, "targetEffort": "RPE 8/10, strong", "recoveryStep": { "label": "Easy jog", "durationMin": 1, "instructions": "Easy jog or walk back down" }, "instructions": "Lean slightly forward from the ankles, short quick steps, look up the hill." },
+        { "label": "Cool-down", "kind": "cooldown", "durationMin": 10, "targetEffort": "RPE 2/10" }
+      ] },
+    { "week": 4, "title": "5K time trial", "type": "race", "targetDistanceKm": 5, "targetEffort": "Best effort",
+      "purpose": "Measures your current 5K fitness so the next block's paces and heart-rate targets are based on real numbers.",
+      "keyPoints": ["Run as evenly as you can; don't start too fast", "Wear your Apple Watch so the data reaches your coach"],
+      "segments": [
+        { "label": "Warm-up", "kind": "warmup", "durationMin": 10, "targetEffort": "RPE 2-3/10", "instructions": "Easy jog, then 2-3 short strides." },
+        { "label": "5K time trial", "kind": "main", "distanceKm": 5, "targetEffort": "RPE 9/10 by the end", "instructions": "First kilometre controlled, middle kilometres steady, then push the last kilometre." },
+        { "label": "Cool-down", "kind": "cooldown", "durationMin": 10, "targetEffort": "RPE 2/10" }
+      ] }
   ]
 }

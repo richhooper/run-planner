@@ -57,7 +57,9 @@ enum PromptBuilder {
             if !target.isEmpty { lines.append("   Planned: \(target)") }
             if let segs = run.segments, !segs.isEmpty {
                 lines.append("   Session: " + segs.map { seg in
-                    [seg.label, seg.summary, seg.intensity].compactMap { $0?.nilIfBlank }.joined(separator: " ")
+                    var s = [seg.label, seg.summary].compactMap(\.nilIfBlank).joined(separator: " ")
+                    if !seg.targetSummary.isEmpty { s += " (\(seg.targetSummary))" }
+                    return s
                 }.joined(separator: "; "))
             }
 
@@ -113,42 +115,80 @@ enum PromptBuilder {
             s += "Start with a short review of how this block went against my goal. Base progression on what I actually did, not just what was planned: consolidate if I missed runs, struggled or my heart rate ran high, and progress if it felt comfortable. "
         }
         s += "Write 4 weeks with \(data.runsPerWeek) runs per week, listed in the order I should do them. Mix easy, long and quality sessions to suit my goal, and keep easy runs genuinely easy.\n\n"
+        s += guidance + "\n\n"
         s += "After any feedback, give the plan as ONE ```json code block in exactly this format (my app reads it):\n\n"
         s += schema
         return s
     }
 
+    /// How to write each run so I can follow it on the day without looking anything up.
+    static let guidance = """
+    ### How to write each run
+    I'm not an expert, and my app shows each run on its own screen, so every run must make sense on its own without me doing any research:
+    - "purpose": 1-2 sentences on why this run is in the plan and what it builds.
+    - "keyPoints": the 2-4 things that matter most today, in plain words (e.g. "Keep heart rate under 145, even if that means walking up hills").
+    - "segments": break EVERY run into the blocks I'll actually do, in order: warm-up, main part (reps, strides, drills, steady running…) and cool-down. A steady easy run can be a single block. My app shows each block as a step with its targets.
+    - Make targets explicit for every block, as numbers wherever possible:
+      - "targetPace" as a range in min/km (e.g. "6:20-6:40 /km"), based on my actual paces above.
+      - "targetHeartRate" as a bpm range (e.g. "130-145 bpm"), with the zone if useful. Work it out from my watch heart-rate data. If you can't be sure, say it's an estimate in the plan's "coachNotes".
+      - "targetEffort" as RPE out of 10 plus a feel (e.g. "RPE 3/10, can chat in full sentences").
+      - For repeats, give "repeats", the length of each rep ("durationMin" or "distanceKm") and a "recoveryStep" for what happens between reps.
+    - "instructions": how to do the block: form cues, what it should feel like, when to back off.
+    - "glossary": explain every running term you use (e.g. strides, tempo, RPE, Zone 2, fartlek, cadence, negative split) in 1-2 plain sentences, once for the whole block. Use the term exactly as written in the runs, because my app matches it to show the explanation on each run.
+
+    ### Apple Watch
+    My app sends each run to my Apple Watch as a custom workout, so don't include Watch setup tips. Each segment becomes one Watch block:
+    - A first segment with "kind": "warmup" becomes the Watch warm-up, and a last segment with "kind": "cooldown" becomes the Watch cool-down. "drills" segments before the warm-up stay off the Watch.
+    - Every other segment becomes a block of "repeats" × (work step + "recoveryStep"). The work step ends after "distanceKm" or "durationMin"; with neither, I press to move on.
+    - Give the alert ranges as numbers only: "alertPace" in min/km (e.g. "5:40-5:50") and "alertHeartRate" in bpm (e.g. "100-145"). Include both where both matter.
+    - Set the top of every alert range to the top of the TARGET, not a hard ceiling. If easy runs are "aim under 145, ceiling 150", use "100-145" so the Watch warns me at 145, while there's still room to slow down. The bottom of a heart-rate range only needs to be low enough not to trigger on walk breaks (about 100 for easy running).
+    - The Watch can alert on only one per step: heart rate for warm-ups, easy and long running and cool-downs, pace for reps, strides and tempo. Add "watchAlert": "pace" or "heartRate" only to override that.
+    - "recoveryStep": { "label", "durationMin" or "distanceKm", "alertHeartRate" (e.g. "100-140", so I know to slow down enough), "instructions" }.
+    """
+
     static let schema = """
     ```json
     {
       "name": "Block 2: 10K build",
-      "coachNotes": "What this block focuses on and why (2-4 sentences).",
+      "coachNotes": "What this block focuses on and why (2-4 sentences). Note here if heart-rate targets are estimates.",
+      "glossary": [
+        { "term": "Zone 2", "meaning": "An easy heart-rate range where you can talk in full sentences. It builds aerobic fitness without tiring you out." },
+        { "term": "Strides", "meaning": "Short, smooth accelerations of about 20 s up to roughly mile pace, then a full walk back. They practise good form and leg speed without being hard work." }
+      ],
       "runs": [
         {
           "week": 1,
-          "title": "Easy run",
+          "title": "Easy run + strides",
           "type": "easy",
           "targetDistanceKm": 5,
-          "targetDurationMin": 32,
+          "targetDurationMin": 34,
           "targetPace": "6:20-6:40 /km",
           "targetEffort": "Zone 2, conversational",
-          "description": "Relaxed and chatty. Finish with 4 x 20 s strides."
+          "purpose": "Builds your aerobic base. The strides at the end keep your legs quick without adding fatigue.",
+          "keyPoints": ["Stay under 145 bpm, even if you have to slow down", "Strides should feel fast but relaxed, never a sprint"],
+          "segments": [
+            { "label": "Easy run", "kind": "main", "durationMin": 30, "targetPace": "6:20-6:40 /km", "targetHeartRate": "130-145 bpm (Zone 2)", "targetEffort": "RPE 3/10, can chat", "alertPace": "6:20-6:40", "alertHeartRate": "130-145", "instructions": "Start slower than you think and let the pace come to you." },
+            { "label": "Strides", "kind": "strides", "durationMin": 0.33, "repeats": 4, "targetEffort": "RPE 7/10, fast but smooth", "instructions": "Build up over the first 5 s, hold, then ease off. Tall posture, quick light feet.",
+              "recoveryStep": { "label": "Walk back", "durationMin": 1, "instructions": "Walk back to the start." } }
+          ]
         },
         {
           "week": 1,
           "title": "400 m repeats",
           "type": "intervals",
           "targetDurationMin": 40,
-          "description": "Warm up well; run the reps fast but controlled.",
+          "purpose": "Teaches your body to run at 5K race pace and improves your top-end speed.",
+          "keyPoints": ["Run every rep at the same pace; don't go out too fast", "Stop if your form falls apart"],
           "segments": [
-            { "label": "Warm-up jog", "durationMin": 10, "intensity": "easy" },
-            { "label": "Fast", "distanceKm": 0.4, "repeats": 6, "intensity": "5K pace, 90 s jog between" },
-            { "label": "Cool-down jog", "durationMin": 10, "intensity": "easy" }
+            { "label": "Warm-up", "kind": "warmup", "durationMin": 10, "targetHeartRate": "under 140 bpm", "targetEffort": "RPE 2-3/10", "alertHeartRate": "110-140" },
+            { "label": "400 m reps", "kind": "reps", "distanceKm": 0.4, "repeats": 6, "targetPace": "5:00-5:10 /km", "targetHeartRate": "will reach 165-175 bpm by the end of each rep", "targetEffort": "RPE 8/10", "alertPace": "5:00-5:10", "instructions": "Aim for even splits. The last rep should feel hard but doable.",
+              "recoveryStep": { "label": "Easy jog", "durationMin": 1.5, "alertHeartRate": "100-140", "instructions": "Jog or walk until your breathing settles." } },
+            { "label": "Cool-down", "kind": "cooldown", "durationMin": 10, "targetEffort": "RPE 2/10", "alertHeartRate": "100-140" }
           ]
         }
       ]
     }
     ```
-    Rules: "type" is one of easy, long, tempo, intervals, hills, recovery, strides, race, walk-run. Only "title" is required; leave out anything that doesn't apply (e.g. no "segments" for steady runs). Numbers must be plain numbers, not strings.
+    Rules: "type" is one of easy, long, tempo, intervals, hills, recovery, strides, race, walk-run. Segment "kind" is one of warmup, main, reps, strides, drills, cooldown. Only "title" (run) and "label" (segment) are required; leave out a field rather than guessing it. Numbers must be plain numbers, not strings; times under a minute are fractions of a minute (20 s = 0.33).
     """
 }
