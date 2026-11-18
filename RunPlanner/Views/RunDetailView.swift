@@ -83,6 +83,23 @@ struct RunDetailView: View {
                         Button("Undo", role: .destructive) { store.setCompletion(nil, for: runID) }
                     }
                 }
+
+                if let w = run.completion?.workout {
+                    if let intervals = w.intervals, !intervals.isEmpty {
+                        Section {
+                            ForEach(Array(intervals.enumerated()), id: \.offset) { _, stat in IntervalRow(stat: stat) }
+                        } header: {
+                            Text("Intervals")
+                        } footer: {
+                            if let note = w.intervalNote { Text(note) }
+                        }
+                    }
+                    if let splits = w.splits, !splits.isEmpty {
+                        Section("Km splits") {
+                            ForEach(Array(splits.enumerated()), id: \.offset) { _, stat in IntervalRow(stat: stat) }
+                        }
+                    }
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .safeAreaInset(edge: .bottom) {
@@ -229,6 +246,35 @@ private struct TargetLine: View {
 private extension Optional where Wrapped == WatchAlert {
     var isPace: Bool { if case .pace? = self { true } else { false } }
     var isHeartRate: Bool { if case .heartRate? = self { true } else { false } }
+}
+
+/// One Watch step or km split: what you did, with the planned target underneath.
+private struct IntervalRow: View {
+    let stat: IntervalStat
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(stat.label).font(stat.purpose == "work" ? .subheadline.bold() : .subheadline)
+                Spacer()
+                if let p = stat.paceSecPerKm { Text(Format.pace(p)).font(.subheadline.bold()).monospacedDigit() }
+            }
+            Text(details).font(.caption).foregroundStyle(.secondary).monospacedDigit()
+            if let target = stat.target {
+                Text("Target: \(target)").font(.caption).foregroundStyle(.tertiary)
+            }
+        }
+        .padding(.leading, stat.purpose == "recovery" ? 16 : 0)
+    }
+
+    private var details: String {
+        var parts = [Format.duration(stat.durationSec)]
+        if let km = stat.distanceKm { parts.append(km < 1 ? "\(Int((km * 1000).rounded())) m" : Format.km(km)) }
+        if let avg = stat.avgHeartRate {
+            parts.append("HR \(Int(avg))" + (stat.maxHeartRate.map { " / \(Int($0)) max" } ?? ""))
+        }
+        return parts.joined(separator: " · ")
+    }
 }
 
 struct WorkoutStats: View {

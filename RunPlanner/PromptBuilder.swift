@@ -74,8 +74,28 @@ enum PromptBuilder {
                 lines.append(actual)
             }
             if let notes = run.completion?.notes?.nilIfBlank { lines.append("   My notes: \(notes)") }
+            if let w = run.completion?.workout { lines += breakdown(w) }
         }
         return lines.joined(separator: "\n")
+    }
+
+    /// Per-step and per-km stats under a completed run.
+    private static func breakdown(_ w: WorkoutSummary) -> [String] {
+        var lines: [String] = []
+        if let intervals = w.intervals, !intervals.isEmpty {
+            lines.append("   Intervals" + (w.intervalNote.map { " (\($0))" } ?? "") + ":")
+            for i in intervals {
+                lines.append("   - \(i.label): \(i.statsLine)" + (i.target.map { " (target \($0))" } ?? ""))
+            }
+        }
+        if let splits = w.splits, !splits.isEmpty {
+            lines.append("   Km splits: " + splits.map { s in
+                var t = "\(s.label) " + (s.paceSecPerKm.map(Format.pace) ?? Format.duration(s.durationSec))
+                if let hr = s.avgHeartRate { t += " HR \(Int(hr))" }
+                return t
+            }.joined(separator: "; "))
+        }
+        return lines
     }
 
     private static func blockSummary(_ plan: TrainingPlan) -> String {
@@ -112,7 +132,7 @@ enum PromptBuilder {
         if isFirstPlan {
             s += "If anything important is missing (current weekly running, recent race times, injuries), ask me before writing the plan. "
         } else {
-            s += "Start with a short review of how this block went against my goal. Base progression on what I actually did, not just what was planned: consolidate if I missed runs, struggled or my heart rate ran high, and progress if it felt comfortable. "
+            s += "Start with a short review of how this block went against my goal. Base progression on what I actually did, not just what was planned: consolidate if I missed runs, struggled or my heart rate ran high, and progress if it felt comfortable. Use the interval and km-split data: how consistent my reps were against their targets, whether heart rate came down in recoveries, and heart-rate drift across easy and long runs. "
         }
         s += "Write 4 weeks with \(data.runsPerWeek) runs per week, listed in the order I should do them. Mix easy, long and quality sessions to suit my goal, and keep easy runs genuinely easy.\n\n"
         s += guidance + "\n\n"

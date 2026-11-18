@@ -313,6 +313,47 @@ extension PlannedRun {
         return layout
     }
 
+    /// Every step the Watch will run, in order. Mirrors `WatchWorkout.workout(for:in:)`.
+    var expectedWatchSteps: [ExpectedStep] {
+        let layout = watchLayout
+        var steps: [ExpectedStep] = []
+        func target(_ seg: Segment) -> String? {
+            watchAlert(for: seg)?.text ?? seg.targetSummary.nilIfBlank
+        }
+        func step(_ seg: Segment, _ purpose: String, label: String? = nil) -> ExpectedStep {
+            ExpectedStep(label: label ?? seg.label, purpose: purpose, target: target(seg),
+                         distanceKm: seg.distanceKm, durationMin: seg.durationMin)
+        }
+
+        if layout.blocks.isEmpty, layout.warmup == nil {
+            steps.append(ExpectedStep(label: title, purpose: "work", target: targetSummary(includeEffort: true).nilIfBlank,
+                                      distanceKm: targetDistanceKm, durationMin: targetDurationMin))
+        } else if layout.blocks.isEmpty, let w = layout.warmup {
+            steps.append(step(w, "work"))   // a workout needs at least one block
+        } else {
+            if let w = layout.warmup { steps.append(step(w, "warmup")) }
+            for seg in layout.blocks {
+                let reps = max(seg.repeats ?? 1, 1)
+                let rec = seg.effectiveRecovery
+                for i in 1...reps {
+                    steps.append(step(seg, "work", label: reps > 1 ? "\(seg.label) \(i)/\(reps)" : seg.label))
+                    if let rec {
+                        steps.append(ExpectedStep(label: "\(rec.label ?? "Recovery") \(i)/\(reps)", purpose: "recovery",
+                                                  target: rec.alert?.text, distanceKm: rec.distanceKm, durationMin: rec.durationMin))
+                    }
+                }
+            }
+        }
+        if let c = layout.cooldown { steps.append(step(c, "cooldown")) }
+        return steps
+    }
+
+    /// Steady runs get km splits instead of (or as well as) intervals.
+    var wantsSplits: Bool {
+        ["easy", "long", "recovery", "walk-run"].contains((type ?? "easy").lowercased())
+            || expectedWatchSteps.filter { $0.purpose == "work" }.count <= 1
+    }
+
     /// The one alert the Watch will use for this segment: pace for hard work, heart rate for easy running.
     func watchAlert(for seg: Segment) -> WatchAlert? {
         let pace = seg.paceRange.map(WatchAlert.pace)
@@ -356,11 +397,53 @@ struct WorkoutSummary: Codable, Hashable, Identifiable {
     var activeKcal: Double?
     var elevationGainM: Double?
     var indoor: Bool?
+    var intervals: [IntervalStat]?    // one per Watch step
+    var splits: [IntervalStat]?       // per km, for steady running
+    var intervalNote: String?         // where the intervals came from, or why they don't match the plan
 
     var paceSecPerKm: Double? {
         guard let km = distanceKm, km > 0.05 else { return nil }
         return durationSec / km
     }
+
+    var hasBreakdown: Bool { intervals != nil || splits != nil }
+}
+
+/// Stats for one Watch step or one km split.
+struct IntervalStat: Codable, Hashable {
+    var label: String
+    var purpose: String            // warmup, work, recovery, cooldown, split
+    var startOffsetSec: Double
+    var durationSec: Double
+    var distanceKm: Double?
+    var avgHeartRate: Double?
+    var maxHeartRate: Double?
+    var target: String?
+
+    var paceSecPerKm: Double? {
+        guard let km = distanceKm, km > 0.05 else { return nil }
+        return durationSec / km
+    }
+
+    /// e.g. "2:17, 0.40 km, 5:42 /km, HR 161 avg/168 max"
+    var statsLine: String {
+        var parts = [Format.duration(durationSec)]
+        if let km = distanceKm { parts.append(km < 1 ? "\(Int((km * 1000).rounded())) m" : Format.km(km)) }
+        if let p = paceSecPerKm { parts.append(Format.pace(p)) }
+        if let avg = avgHeartRate {
+            parts.append("HR \(Int(avg)) avg" + (maxHeartRate.map { "/\(Int($0)) max" } ?? ""))
+        }
+        return parts.joined(separator: ", ")
+    }
+}
+
+/// One step the Watch workout will run, in order, as built by `WatchWorkout`.
+struct ExpectedStep: Hashable {
+    var label: String
+    var purpose: String            // warmup, work, recovery, cooldown
+    var target: String?
+    var distanceKm: Double?
+    var durationMin: Double?
 }
 
 // MARK: - Helpers

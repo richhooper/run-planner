@@ -8,6 +8,7 @@ struct ExportView: View {
 
     @State private var healthRuns: [WorkoutSummary] = []
     @State private var copied = false
+    @State private var addingIntervals = false
 
     private var prompt: String {
         PromptBuilder.prompt(for: store.data, recentRuns: healthRuns)
@@ -30,6 +31,15 @@ struct ExportView: View {
                     }
                     .font(.callout)
                     .foregroundStyle(.secondary)
+
+                    if addingIntervals {
+                        Label {
+                            Text("Adding interval stats from Apple Health…")
+                        } icon: {
+                            ProgressView()
+                        }
+                        .font(.callout)
+                    }
 
                     Text(prompt)
                         .font(.system(.footnote, design: .monospaced))
@@ -56,6 +66,7 @@ struct ExportView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
+                    .disabled(addingIntervals)
 
                     Link(destination: URL(string: "https://claude.ai/new")!) {
                         Label("Open Claude", systemImage: "arrow.up.right")
@@ -69,7 +80,23 @@ struct ExportView: View {
             .task {
                 // Include unplanned runs too, so the AI sees everything you did.
                 healthRuns = (try? await HealthService.shared.recentRuns(days: 42)) ?? []
+                await addMissingIntervals()
             }
         }
+    }
+
+    /// Runs completed before interval stats existed get them now, so the prompt includes them.
+    private func addMissingIntervals() async {
+        let missing = (store.data.currentPlan?.runs ?? []).filter {
+            $0.completion?.workout.map { !$0.hasBreakdown } ?? false
+        }
+        guard !missing.isEmpty else { return }
+        addingIntervals = true
+        for run in missing {
+            guard let w = run.completion?.workout,
+                  let detailed = try? await HealthService.shared.addBreakdown(to: w, for: run) else { continue }
+            store.updateWorkout(detailed, for: run.id)
+        }
+        addingIntervals = false
     }
 }

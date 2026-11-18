@@ -57,6 +57,14 @@ final class PlanStore {
         case removeLinks
     }
 
+    /// Replaces the Apple Watch data on a completed run, e.g. after adding interval stats.
+    func updateWorkout(_ workout: WorkoutSummary, for id: UUID) {
+        guard var plan = data.currentPlan, let i = plan.runs.firstIndex(where: { $0.id == id }),
+              plan.runs[i].completion?.workout?.id == workout.id else { return }
+        plan.runs[i].completion?.workout = workout
+        data.currentPlan = plan
+    }
+
     /// Makes `plan` the current plan.
     func install(_ plan: TrainingPlan, mode: InstallMode = .archive) {
         var d = data

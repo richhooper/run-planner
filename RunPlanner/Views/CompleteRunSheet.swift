@@ -11,6 +11,7 @@ struct CompleteRunSheet: View {
     @State private var healthError: String?
     @State private var effort = 5
     @State private var notes = ""
+    @State private var saving = false
 
     var body: some View {
         NavigationStack {
@@ -55,7 +56,13 @@ struct CompleteRunSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("Done", action: save).bold() }
+                ToolbarItem(placement: .confirmationAction) {
+                    if saving {
+                        ProgressView()
+                    } else {
+                        Button("Done") { Task { await save() } }.bold()
+                    }
+                }
             }
             .task { await load() }
         }
@@ -74,8 +81,13 @@ struct CompleteRunSheet: View {
         loading = false
     }
 
-    private func save() {
-        let workout = workouts.first { $0.id == selectedID }
+    private func save() async {
+        saving = true
+        var workout = workouts.first { $0.id == selectedID }
+        // Per-step and per-km stats; if Health can't provide them, keep the totals.
+        if let w = workout, let detailed = try? await HealthService.shared.addBreakdown(to: w, for: run) {
+            workout = detailed
+        }
         store.setCompletion(
             Completion(date: workout?.start ?? .now, effort: effort, notes: notes.nilIfBlank, workout: workout),
             for: run.id
