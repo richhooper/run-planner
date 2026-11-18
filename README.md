@@ -34,7 +34,7 @@ No accounts, servers or API keys. Data lives in one JSON file on the phone, and 
 4. Plug in your iPhone and pick it as the run destination. On the iPhone, turn on **Settings › Privacy & Security › Developer Mode** (it restarts).
 5. Press ▶ Run. The first time, go to **Settings › General › VPN & Device Management** on the iPhone and trust your developer profile.
 
-**Free account limits:** the install expires after **7 days**. Plug the phone in and press ▶ Run again to refresh it. Your plan and history are kept. When you move to the paid Developer Program, change the Team and the install lasts a year (and TestFlight becomes an option).
+**Free account limits:** the install expires after **7 days**. Plug the phone in and run `./push-to-phone.sh` (or press ▶ Run in Xcode) to refresh it, then approve the app under **Settings › General › VPN & Device Management** if the phone asks. Your plan and history are kept. When you move to the paid Developer Program, change the Team and the install lasts a year (and TestFlight becomes an option).
 
 **No XcodeGen?** Create a new iOS App project in Xcode (SwiftUI, name it RunPlanner, iOS 17), delete its generated `ContentView.swift` and `RunPlannerApp.swift`, and drag this `RunPlanner/` folder in. Then add the **HealthKit** capability and add *Privacy – Health Share Usage Description* to the Info tab.
 
